@@ -6,12 +6,20 @@
 int main()
 { // Пример использования
 
-    Matrix<int> mat(3, 3, 1, 5);
+    Matrix<double> mat(3, 3, 1, 5);
 
     std::cout << "Matrix A:\n";
     mat.Print();
     std::cout << std::endl;
-  
+
+    try {
+         //Matrix<int> inverseMat = mat.inverse();
+        std::cout << "Inverse of Matrix A:\n";
+        mat.inverse().Print();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 
     return 0;
 }

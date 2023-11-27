@@ -35,8 +35,7 @@ public:
 
 	T Trace() const;
 	void Print() const;
-
-	
+	Matrix inverse() const;
 private:
 	T** data_;
 	int rows_;
@@ -120,7 +119,6 @@ Matrix<T>::~Matrix() {
 	delete[] data_;
 	data_ = nullptr;
 }
-
 
 template <typename T>
 void Matrix<T>::Swap(Matrix<T>& other) noexcept {
@@ -307,4 +305,52 @@ void Matrix<T>::Print() const {
 		}
 		std::cout << "\n";
 	}
+}
+
+
+
+template<typename T>
+inline Matrix<T> Matrix<T>::inverse() const {
+	if (rows_ != cols_) {
+		throw std::logic_error("Inverse can only be calculated for square matrices");
+	}
+
+	// Создаем расширенную матрицу [A | I]
+	Matrix<T> extended(rows_, cols_ * 2,0);
+	for (int i = 0; i < rows_; ++i) {
+		for (int j = 0; j < cols_; ++j) {
+			extended(i, j) = (*this)(i, j);
+		}
+		extended(i, i + cols_) = 1;
+	}
+
+	// Применяем элементарные преобразования к расширенной матрице
+	for (int i = 0; i < rows_; ++i) {
+		// Зануляем все элементы столбца i, кроме i-го
+		T pivot = extended(i, i);
+		if (pivot == 0) {
+			throw std::logic_error("Matrix is not invertible");
+		}
+		for (int j = 0; j < cols_ * 2; ++j) {
+			extended(i, j) /= pivot;
+		}
+		// Обнуляем все элементы в остальных строках столбца i
+		for (int k = 0; k < rows_; ++k) {
+			if (k != i) {
+				T factor = extended(k, i);
+				for (int j = 0; j < cols_ * 2; ++j) {
+					extended(k, j) -= factor * extended(i, j);
+				}
+			}
+		}
+	}
+
+	// Извлекаем обратную матрицу
+	Matrix<T> result(rows_, cols_,0);
+	for (int i = 0; i < rows_; ++i) {
+		for (int j = 0; j < cols_; ++j) {
+			result(i, j) = extended(i, j + cols_);
+		}
+	}
+	return result;
 }
