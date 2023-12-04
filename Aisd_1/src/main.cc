@@ -13,9 +13,9 @@ int main()
     std::cout << std::endl;
 
     try {
-         //Matrix<int> inverseMat = mat.inverse();
-        std::cout << "Inverse of Matrix A:\n";
-        mat.inverse().Print();
+        std::cout << "Inverse of Matrix A: \n" ;
+		
+        inverse(mat).Print();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

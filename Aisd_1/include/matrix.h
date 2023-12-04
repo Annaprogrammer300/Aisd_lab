@@ -32,10 +32,10 @@ public:
 
 	int get_rows() const;
 	int get_cols() const;
+	int get_data() const;
 
 	T Trace() const;
 	void Print() const;
-	Matrix inverse() const;
 private:
 	T** data_;
 	int rows_;
@@ -230,6 +230,10 @@ template <typename T>
 int Matrix<T>::get_cols() const {
 	return cols_;
 }
+template <typename T>
+int Matrix<T>::get_data() const {
+	return data_;
+}
 
 template <typename T>
 bool operator==(const Matrix<T>& matrix_first, const Matrix<T>& matrix_second) {
@@ -308,18 +312,21 @@ void Matrix<T>::Print() const {
 }
 
 
-
 template<typename T>
-inline Matrix<T> Matrix<T>::inverse() const {
+Matrix<T> inverse(const Matrix<T>& mat) {
+	int rows_ = mat.get_rows();
+	int cols_ = mat.get_cols();
+
 	if (rows_ != cols_) {
 		throw std::logic_error("Inverse can only be calculated for square matrices");
 	}
 
 	// Создаем расширенную матрицу [A | I]
+	
 	Matrix<T> extended(rows_, cols_ * 2,0);
 	for (int i = 0; i < rows_; ++i) {
 		for (int j = 0; j < cols_; ++j) {
-			extended(i, j) = (*this)(i, j);
+			extended(i, j) = mat(i, j);
 		}
 		extended(i, i + cols_) = 1;
 	}
@@ -346,11 +353,11 @@ inline Matrix<T> Matrix<T>::inverse() const {
 	}
 
 	// Извлекаем обратную матрицу
-	Matrix<T> result(rows_, cols_,0);
+	Matrix<T> result(rows_, cols_, 0);
 	for (int i = 0; i < rows_; ++i) {
 		for (int j = 0; j < cols_; ++j) {
 			result(i, j) = extended(i, j + cols_);
 		}
 	}
-	return result;
+	return  result;
 }
