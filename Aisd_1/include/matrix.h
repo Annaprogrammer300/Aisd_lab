@@ -254,7 +254,7 @@
 		const double kEpsilon = 1.0E-5;
 		for (int i = 0; i < matrix_first.get_rows(); ++i) {
 			for (int j = 0; j < matrix_first.get_cols(); ++j) {
-				if ((abs((matrix_first(i, j) - matrix_second(i, j)).imag()) > kEpsilon) || (abs((matrix_first(i, j) - matrix_second(i, j)).real()) > kEpsilon))
+				if ((abs((matrix_first(i, j).imag() - matrix_second(i, j)).imag()) > kEpsilon) || (abs((matrix_first(i, j).real() - matrix_second(i, j)).real()) > kEpsilon))
 					return false;
 			}
 		}
